@@ -4,7 +4,7 @@ import { useSyncExternalStore } from "react";
 import { normalizeData } from "./schema";
 import type { AppData } from "./types";
 
-import { STORAGE_KEY } from "./env";
+import { LAST_LOCALE_KEY, STORAGE_KEY } from "./env";
 export { STORAGE_KEY };
 
 type Status = "loading" | "empty" | "ready";
@@ -96,6 +96,13 @@ export function setData(next: AppData | null) {
   }
   applyDocumentPrefs(state.data);
   emit();
+}
+
+/** Clears this device's records and returns to the welcome screen. */
+export function logOut() {
+  const locale = state.data?.settings.locale;
+  if (locale) localStorage.setItem(LAST_LOCALE_KEY, locale);
+  setData(null);
 }
 
 export function update(fn: (d: AppData) => AppData) {

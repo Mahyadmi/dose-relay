@@ -6,6 +6,7 @@ import {
   ExternalLink,
   Code2,
   Lock,
+  LogOut,
   Send,
   Sparkles,
   Trash2,
@@ -15,14 +16,15 @@ import { useRef, useState, type ReactNode } from "react";
 import { confirmDialog, showToast } from "@/components/feedback";
 import { LogoMark } from "@/components/Logo";
 import { ShareSheet } from "@/components/ShareSheet";
-import { Card, Field, Segmented, SectionTitle, Switch, TextInput } from "@/components/ui";
+import { Button, Card, Field, Segmented, SectionTitle, Switch, TextInput } from "@/components/ui";
 import { demoData } from "@/lib/demo";
 import { dateKey } from "@/lib/dates";
 import { REPO_URL } from "@/lib/env";
 import { useApp } from "@/lib/hooks";
 import { buildIcs } from "@/lib/ics";
 import { normalizeData } from "@/lib/schema";
-import { getData, setData, update } from "@/lib/store";
+import { getData, logOut, setData, update } from "@/lib/store";
+import { useRouter } from "next/navigation";
 import type { Settings } from "@/lib/types";
 
 function download(name: string, content: string, type: string) {
@@ -38,6 +40,23 @@ export function More() {
   const { data, t } = useApp();
   const s = data.settings;
   const [sharing, setSharing] = useState(false);
+  const router = useRouter();
+
+  const logout = async () => {
+    // Demo data is not real, so it can go without asking.
+    if (!s.demo) {
+      const ok = await confirmDialog({
+        title: t("settings.logout"),
+        body: t("settings.logoutConfirm"),
+        confirmLabel: t("settings.logout"),
+        cancelLabel: t("form.cancel"),
+        danger: true,
+      });
+      if (!ok) return;
+    }
+    router.push("/");
+    logOut();
+  };
   const fileRef = useRef<HTMLInputElement>(null);
   const set = (patch: Partial<Settings>) => update((d) => ({ ...d, settings: { ...d.settings, ...patch } }));
 
@@ -71,6 +90,13 @@ export function More() {
             />
           )}
         </Field>
+        <div className="mt-4 border-t border-line pt-4">
+          <Button variant="danger" className="w-full" onClick={logout}>
+            <LogOut className="size-5 rtl:rotate-180" aria-hidden />
+            {s.demo ? t("demo.exit") : t("settings.logout")}
+          </Button>
+          <p className="mt-2 text-sm text-muted">{s.demo ? t("settings.logoutDemoHint") : t("settings.logoutHint")}</p>
+        </div>
       </Card>
 
       <SectionTitle>{t("settings.display")}</SectionTitle>

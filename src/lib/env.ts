@@ -5,3 +5,6 @@ export const REPO_URL = "https://github.com/Mahyadmi/dose-relay";
 
 /** localStorage key for all app data. */
 export const STORAGE_KEY = "doserelay:v1";
+
+/** Remembers the language after logging out, so the welcome screen keeps it. */
+export const LAST_LOCALE_KEY = "doserelay:last-locale";

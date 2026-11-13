@@ -1,14 +1,14 @@
 "use client";
 
-import { ArrowRightLeft, CalendarCheck, MoreHorizontal, Users } from "lucide-react";
+import { ArrowRightLeft, CalendarCheck, LogOut, MoreHorizontal, Sparkles, Users } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, type ReactNode } from "react";
 import { BASE_PATH } from "@/lib/env";
 import { buildHandover, defaultSince } from "@/lib/handover";
 import { useApp, useNow } from "@/lib/hooks";
 import type { MessageKey } from "@/lib/i18n";
-import { useStore } from "@/lib/store";
+import { logOut, useStore } from "@/lib/store";
 import { ConfirmHost, Toaster } from "./feedback";
 import { LogoMark, Wordmark } from "./Logo";
 import { Onboarding } from "./Onboarding";
@@ -39,6 +39,11 @@ export function AppShell({ children }: { children: ReactNode }) {
       navigator.serviceWorker.register(`${BASE_PATH}/sw.js`, { scope: `${BASE_PATH}/` }).catch(() => {});
     }
   }, []);
+
+  // Entering or leaving the app (welcome screen <-> app) should start at the top.
+  useEffect(() => {
+    if (status !== "loading") window.scrollTo(0, 0);
+  }, [status]);
 
   let content: ReactNode;
   if (status === "loading") {
@@ -110,6 +115,7 @@ function Frame({ pathname, children }: { pathname: string; children: ReactNode }
       </aside>
 
       <main id="main" className="mx-auto w-full max-w-2xl px-4 pb-32 pt-4 lg:px-8 lg:pb-12 lg:pt-8">
+        {data.settings.demo && <DemoBar />}
         {children}
       </main>
 
@@ -151,6 +157,29 @@ function Frame({ pathname, children }: { pathname: string; children: ReactNode }
           })}
         </ul>
       </nav>
+    </div>
+  );
+}
+
+/** Shown on every screen while the example family is loaded, with a one-tap way out. */
+function DemoBar() {
+  const { t } = useApp();
+  const router = useRouter();
+  return (
+    <div className="no-print mb-4 flex items-center gap-3 rounded-2xl bg-info-soft px-4 py-2.5 text-sm text-info">
+      <Sparkles className="size-4 shrink-0" aria-hidden />
+      <p className="flex-1 font-medium">{t("demo.banner")}</p>
+      <button
+        type="button"
+        onClick={() => {
+          router.push("/");
+          logOut();
+        }}
+        className="inline-flex min-h-9 shrink-0 items-center gap-1.5 rounded-lg bg-surface px-3 font-semibold text-ink shadow-card hover:bg-surface-2"
+      >
+        <LogOut className="size-4 rtl:rotate-180" aria-hidden />
+        {t("demo.exit")}
+      </button>
     </div>
   );
 }

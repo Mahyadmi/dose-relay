@@ -126,3 +126,10 @@ describe("calendar reminders", () => {
     expect(ics).toContain("END:VCALENDAR");
   });
 });
+
+describe("demo mode", () => {
+  it("marks the demo family so it can offer an Exit demo button", () => {
+    expect(demoData(now).settings.demo).toBe(true);
+    expect(emptyData().settings.demo).toBeUndefined();
+  });
+});

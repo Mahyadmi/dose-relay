@@ -125,6 +125,8 @@ export interface Settings {
   showBothLanguages: boolean;
   /** ISO timestamp of the last time this caregiver marked the handover as read. */
   handoverReadAt?: string;
+  /** True while the example family is loaded. */
+  demo?: boolean;
 }
 
 export interface AppData {

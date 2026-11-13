@@ -254,6 +254,7 @@ export function demoData(now: Date, settings: Partial<Settings> = {}): AppData {
     },
   ];
 
+  data.settings.demo = true;
   data.settings.handoverReadAt = new Date(now.getTime() - 10 * HOUR).toISOString();
   return data;
 }

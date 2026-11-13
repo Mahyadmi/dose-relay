@@ -3,6 +3,7 @@
 import { ArrowRightLeft, Languages, Lock, ShieldCheck, Sparkles, UserPlus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { demoData } from "@/lib/demo";
+import { LAST_LOCALE_KEY } from "@/lib/env";
 import { makeI18n } from "@/lib/hooks";
 import { DEFAULT_SETTINGS, emptyData } from "@/lib/schema";
 import { setData } from "@/lib/store";
@@ -11,9 +12,11 @@ import { Wordmark } from "./Logo";
 import { Button, Segmented, TextInput } from "./ui";
 
 export function Onboarding() {
-  const [locale, setLocale] = useState<Locale>(() =>
-    typeof navigator !== "undefined" && navigator.language.startsWith("fa") ? "fa" : "en",
-  );
+  const [locale, setLocale] = useState<Locale>(() => {
+    const last = localStorage.getItem(LAST_LOCALE_KEY);
+    if (last === "fa" || last === "en") return last;
+    return navigator.language.startsWith("fa") ? "fa" : "en";
+  });
   const [name, setName] = useState("");
   const settings = {
     ...DEFAULT_SETTINGS,
