@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import type { ReactNode } from "react";
 import { Geist, Vazirmatn } from "next/font/google";
 import { AppShell } from "@/components/AppShell";
 import { BASE_PATH, STORAGE_KEY } from "@/lib/env";
@@ -37,7 +38,7 @@ const prefsScript = `(function(){try{var d=JSON.parse(localStorage.getItem(${JSO
   STORAGE_KEY,
 )})||"null");var s=(d&&d.settings)||{};var r=document.documentElement;var l=s.locale||"en";r.lang=l;r.dir=l==="fa"?"rtl":"ltr";var t=s.theme||"system";if(t==="dark"||(t==="system"&&matchMedia("(prefers-color-scheme: dark)").matches))r.classList.add("dark");if(s.highContrast)r.classList.add("hc");if(s.textScale)r.style.fontSize=(s.textScale*100)+"%";}catch(e){}})();`;
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       lang="en"
