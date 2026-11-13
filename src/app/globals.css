@@ -1,26 +1,171 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #f5f6f3;
+  --surface: #ffffff;
+  --surface-2: #eff1ed;
+  --border: #e1e5df;
+  --text: #16201b;
+  --muted: #5a6660;
+  --primary: #0f766e;
+  --primary-hover: #0c5f58;
+  --primary-fg: #ffffff;
+  --primary-soft: #e3f3ef;
+  --ok: #15803d;
+  --ok-soft: #e7f5ea;
+  --warn: #b45309;
+  --warn-soft: #fdf1df;
+  --late: #c2410c;
+  --late-soft: #fdeadf;
+  --danger: #b91c1c;
+  --danger-soft: #fdeaea;
+  --info: #1d4ed8;
+  --info-soft: #e8eefc;
+  --shadow: 0 1px 2px rgb(16 24 20 / 0.06), 0 2px 8px rgb(16 24 20 / 0.04);
+  color-scheme: light;
+}
+
+.dark {
+  --bg: #0e1311;
+  --surface: #151c19;
+  --surface-2: #1c2521;
+  --border: #29332e;
+  --text: #e7eeea;
+  --muted: #98a59e;
+  --primary: #2cc2ad;
+  --primary-hover: #4fd3c0;
+  --primary-fg: #04201c;
+  --primary-soft: #133029;
+  --ok: #4ade80;
+  --ok-soft: #12291b;
+  --warn: #fbbf24;
+  --warn-soft: #2d2410;
+  --late: #fb923c;
+  --late-soft: #2e1d10;
+  --danger: #f87171;
+  --danger-soft: #331617;
+  --info: #93b4ff;
+  --info-soft: #172038;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.4);
+  color-scheme: dark;
+}
+
+/* High contrast: stronger text and borders, for low vision. */
+.hc {
+  --text: #000000;
+  --muted: #26302b;
+  --border: #6b7570;
+  --primary: #0a4f49;
+  --primary-hover: #073934;
+}
+.dark.hc {
+  --text: #ffffff;
+  --muted: #dbe4df;
+  --border: #8a9690;
+  --primary: #5eead4;
+  --primary-hover: #99f6e4;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--border);
+  --color-ink: var(--text);
+  --color-muted: var(--muted);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-fg: var(--primary-fg);
+  --color-primary-soft: var(--primary-soft);
+  --color-ok: var(--ok);
+  --color-ok-soft: var(--ok-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-late: var(--late);
+  --color-late-soft: var(--late-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --font-sans: var(--font-geist-sans), var(--font-vazirmatn), ui-sans-serif, system-ui, sans-serif;
+  --shadow-card: var(--shadow);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-bottom: 6rem;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+}
+
+/* Persian text reads better in Vazirmatn first. */
+html[lang="fa"] body {
+  font-family: var(--font-vazirmatn), var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 0.5rem;
+}
+
+dialog::backdrop {
+  background: rgb(10 15 13 / 0.5);
+  backdrop-filter: blur(2px);
+}
+
+dialog[open] {
+  animation: sheet-in 180ms ease-out;
+}
+
+@keyframes sheet-in {
+  from {
+    transform: translateY(16px);
+    opacity: 0;
+  }
+}
+
+.toast-in {
+  animation: toast-in 200ms ease-out;
+}
+@keyframes toast-in {
+  from {
+    transform: translateY(12px);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Keep medicine names and Latin text readable inside right-to-left layouts. */
+.ltr-iso {
+  unicode-bidi: isolate;
+  direction: ltr;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+    color: #000;
+  }
+  .print-plain {
+    box-shadow: none !important;
+    border-color: #999 !important;
+  }
 }
